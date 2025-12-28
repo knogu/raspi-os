@@ -46,3 +46,13 @@ else
 endif
 	cp config.txt $(BOOTMNT)/
 	sync
+
+armstub/build/armstub_s.o: armstub/src/armStub.S
+	mkdir -p $(@D)
+	$(ARMGNU)-gcc $(COPTS) -MMD -c $< -o $@
+
+armstub: armstub/build/armstub_s.o
+	$(ARMGNU)-ld --section-start=.text=0 -o armstub/build/armstub.elf armstub/build/armstub_s.o
+	$(ARMGNU)-objcopy armstub/build/armstub.elf -O binary armstub-new.bin
+	cp armstub-new.bin $(BOOTMNT)/
+	sync
