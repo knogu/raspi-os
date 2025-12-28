@@ -25,6 +25,21 @@ void kernel_main() {
     timer_init();
 
     printf("\nEL: %d\n", get_el());
+
+    printf("sleeping 2000 ms...\n");
+    timer_sleep(2000);
+
+    printf("sleeping 2000 ms...\n");
+    timer_sleep(2000);
+
+    printf("sleeping 5000 ms...\n");
+    timer_sleep(5000);
+
+    printf("sleeping 5000 ms...\n");
+    timer_sleep(5000);
+
+    printf("done\n");
+
     while (1) {
         // uart_send(uart_recv());
     }
