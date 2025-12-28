@@ -23,7 +23,7 @@ void uart_init() {
     REGS_AUX->mu_baud_rate = 270;
 #endif
 
-#if RPI_VERSION == 3
+#if RPI_VERSION == 4
     REGS_AUX->mu_baud_rate = 541;
 #endif
 
