@@ -171,12 +171,12 @@ void arp_test(void)
 
             memcpy(routerMAC, checkPacket->senderMAC, 6);
             printf("Router MAC is ");
-            printf("%d", routerMAC[0]);
-            printf("%d", routerMAC[1]);
-            printf("%d", routerMAC[2]);
-            printf("%d", routerMAC[3]);
-            printf("%d", routerMAC[4]);
-            printf("%d", routerMAC[5]);
+            printf("%x ", routerMAC[0]);
+            printf("%x ", routerMAC[1]);
+            printf("%x ", routerMAC[2]);
+            printf("%x ", routerMAC[3]);
+            printf("%x ", routerMAC[4]);
+            printf("%x ", routerMAC[5]);
             printf("\n");
 
             break;
