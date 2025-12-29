@@ -2,6 +2,7 @@
 #include "mini_uart.h"
 #include "printf.h"
 #include "irq.h"
+#include "spi.h"
 #include "timer.h"
 
 void putc(void *p, char c) {
@@ -14,6 +15,9 @@ void putc(void *p, char c) {
 
 u32 get_el();
 
+void init_network(void);
+void arp_test(void);
+
 void kernel_main() {
     uart_init();
     init_printf(0, putc);
@@ -23,6 +27,10 @@ void kernel_main() {
     enable_interrupt_controller();
     irq_enable();
     timer_init();
+
+    spi_init();
+    init_network();
+    arp_test();
 
     printf("\nEL: %d\n", get_el());
 
