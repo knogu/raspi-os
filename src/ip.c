@@ -48,7 +48,7 @@ void SendPing(uint8_t *senderIP, uint8_t *targetIP, uint8_t *deviceMAC, uint8_t 
 
     ip.verAndHeaderLen = 4 << 4 | 5; // 4 is from ipv4 and 5 is from that the header len 160 bits divided by 32
     ip.tos = 0;
-    ip.packetsLen = 7; // todo: calculate
+    ip.packetsLen = 7 << 8; // todo: calculate
     ip.ttl = 64;
     ip.protocol = 1; // icmp
     ip.headerChecksum = 0; // todo
