@@ -20,3 +20,5 @@ void gpio_pin_enable(u8 piNumber);
 unsigned int gpio_call(unsigned int pin_number, unsigned int value, unsigned int base, unsigned int field_size, unsigned int field_max);
 
 unsigned int gpio_pull(unsigned int pin_number, unsigned int value);
+
+void gpio_setPinOutputBool(u8 pin_number, unsigned int onOrOff);

@@ -17,13 +17,12 @@ void spi_init() {
     gpio_pin_enable(11);
 }
 
-void spi_send_recv(u8 chip_select, u8 *sbuffer, u8 *rbuffer, u32 size) {
+void spi_send_recv(unsigned char *sbuffer, unsigned char *rbuffer, unsigned int size) {
     REGS_SPI0->data_length = size;
-    REGS_SPI0->cs = (REGS_SPI0->cs & ~CS_CS) | (chip_select << CS_CS__SHIFT) |
-        CS_CLEAR_RX | CS_CLEAR_TX | CS_TA;
+    REGS_SPI0->cs = REGS_SPI0->cs | CS_CLEAR_RX | CS_CLEAR_TX | CS_TA;
 
-    u32 read_count = 0;
-    u32 write_count = 0;
+    unsigned int read_count = 0;
+    unsigned int write_count = 0;
 
     while(read_count < size || write_count < size) {
         while(write_count < size && REGS_SPI0->cs & CS_TXD) {
@@ -37,7 +36,7 @@ void spi_send_recv(u8 chip_select, u8 *sbuffer, u8 *rbuffer, u32 size) {
         }
 
         while(read_count < size && REGS_SPI0->cs & CS_RXD) {
-            u32 data = REGS_SPI0->fifo;
+            unsigned int data = REGS_SPI0->fifo;
 
             if (rbuffer) {
                 *rbuffer++ = data;
@@ -47,20 +46,24 @@ void spi_send_recv(u8 chip_select, u8 *sbuffer, u8 *rbuffer, u32 size) {
         }
     }
 
-    while(!(REGS_SPI0->cs & CS_DONE)) {
-        while(REGS_SPI0->cs & CS_RXD) {
-            u32 r = REGS_SPI0->fifo;
-            printf("Left Over: %d\n", r);
-        }
-    }
+    // while(!(REGS_SPI0->cs & CS_DONE)) {
+    //     while(REGS_SPI0->cs & CS_RXD) {
+    //         unsigned int r = REGS_SPI0->fifo;
+    //         debughex(r);
+    //     }
+    // }
 
     REGS_SPI0->cs = (REGS_SPI0->cs & ~CS_TA);
 }
 
-void spi_send(u8 chip_select, u8 *data, u32 size) {
-    spi_send_recv(chip_select, data, 0, size);
+void spi_send(unsigned char *data, unsigned int size) {
+    spi_send_recv(data, 0, size);
 }
 
-void spi_recv(u8 chip_select, u8 *data, u32 size) {
-    spi_send_recv(chip_select, 0, data, size);
+void spi_recv(unsigned char *data, unsigned int size) {
+    spi_send_recv(0, data, size);
+}
+
+void spi_chip_select(unsigned char chip_select) {
+    gpio_setPinOutputBool(8, chip_select);
 }
