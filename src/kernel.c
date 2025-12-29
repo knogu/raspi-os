@@ -17,6 +17,7 @@ u32 get_el();
 
 void init_network(void);
 void arp_test(void);
+void ping_test();
 
 void kernel_main() {
     uart_init();
@@ -31,6 +32,7 @@ void kernel_main() {
     spi_init();
     init_network();
     arp_test();
+    ping_test();
 
     printf("\nEL: %d\n", get_el());
 

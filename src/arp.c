@@ -66,15 +66,6 @@ void *memset(void *dest, uint8_t val, uint16_t len)
     return dest;
 }
 
-void *memcpy(void *dest, const void *src, uint16_t len)
-{
-    uint8_t *d = dest;
-    const uint8_t *s = src;
-    while (len--)
-       *d++ = *s++;
-    return dest;
-}
-
 uint8_t memcmp(void *str1, void *str2, unsigned count)
 {
     uint8_t *s1 = str1;
