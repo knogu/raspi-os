@@ -1,15 +1,10 @@
 #include "./enc28j60.h"
 #include "../include/printf.h"
+#include "../include/common.h"
 
 ENC_HandleTypeDef handle;
 
 // Structure for Ethernet header
-
-typedef struct {
-   uint8_t DestAddrs[6];
-   uint8_t SrcAddrs[6];
-   uint16_t type;
-} EtherNetII;
 
 // Ethernet packet types
 

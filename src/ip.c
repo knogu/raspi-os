@@ -3,6 +3,7 @@
 #include "../include/printf.h"
 
 typedef struct {
+    EtherNetII eth;
     u8 verAndHeaderLen;
     u8 tos;
     u16 packetsLen;
@@ -32,7 +33,7 @@ typedef struct {
 
 extern ENC_HandleTypeDef handle;
 
-void SendPing(uint8_t *senderIP, uint8_t *targetIP) {
+void SendPing(uint8_t *senderIP, uint8_t *targetIP, uint8_t *deviceMAC, uint8_t *destMac) {
     // Icmp icmp;
     // icmp.type = 8;
     // icmp.code = 0;
@@ -41,6 +42,10 @@ void SendPing(uint8_t *senderIP, uint8_t *targetIP) {
     // icmp.sequence = 1;
 
     IpIcmp ip;
+    memcpy(ip.eth.SrcAddrs, deviceMAC, 6);
+    memcpy(ip.eth.DestAddrs, destMac, 6);
+    ip.eth.type = 0x0008;
+
     ip.verAndHeaderLen = 4 << 4 | 5; // 4 is from ipv4 and 5 is from that the header len 160 bits divided by 32
     ip.tos = 0;
     ip.packetsLen = 7; // todo: calculate
@@ -56,8 +61,7 @@ void SendPing(uint8_t *senderIP, uint8_t *targetIP) {
     ip.sequence = 1;
 
     if (ENC_RestoreTXBuffer(&handle, sizeof(IpIcmp)) == 0) {
-        printf("Sending ARP request.");
-        printf("\n");
+        printf("Sending ping...\n");
 
         ENC_WriteBuffer((unsigned char *)&ip, sizeof(IpIcmp));
         handle.transmitLength = sizeof(IpIcmp);
@@ -69,8 +73,11 @@ void SendPing(uint8_t *senderIP, uint8_t *targetIP) {
 extern uint8_t routerIP[4];
 extern uint8_t deviceIP[4];
 
+extern uint8_t myMAC[6];
+extern uint8_t routerMAC[6];
+
 void ping_test() {
-    SendPing(deviceIP, routerIP);
+    SendPing(deviceIP, routerIP, myMAC, routerMAC);
     printf("Waiting for ping response\n");
     while (1) {
         while (!ENC_GetReceivedFrame(&handle));
