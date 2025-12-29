@@ -54,7 +54,7 @@ uint8_t deviceIP[4] = { 192, 168, 0, 66 };
 
 // IP Address of the router, whose hardware address we will find using the ARP request
 
-uint8_t routerIP[4] = { 192, 168, 0, 1 };
+uint8_t routerIP[4] = { 192, 168, 0, 8 };
 
 // HELPER FUNCTIONS
 
