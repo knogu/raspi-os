@@ -57,8 +57,8 @@ void SendPing(uint8_t *senderIP, uint8_t *targetIP, uint8_t *deviceMAC, uint8_t 
     ip.type = 8;
     ip.code = 0;
     ip.checksum = 0x822f; // todo: calculate
-    ip.identifier = 2; // any value should be fine
-    ip.sequence = 1;
+    ip.identifier = 2 << 8; // any value should be fine
+    ip.sequence = 1 << 8;
 
     if (ENC_RestoreTXBuffer(&handle, sizeof(IpIcmp)) == 0) {
         printf("Sending ping...\n");
