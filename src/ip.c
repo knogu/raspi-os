@@ -56,7 +56,7 @@ void SendPing(uint8_t *senderIP, uint8_t *targetIP, uint8_t *deviceMAC, uint8_t 
     memcpy(ip.destinationIP, targetIP, 4);
     ip.type = 8;
     ip.code = 0;
-    ip.checksum = 0x8231; // todo: calculate
+    ip.checksum = 0x822f; // todo: calculate
     ip.identifier = 2; // any value should be fine
     ip.sequence = 1;
 
