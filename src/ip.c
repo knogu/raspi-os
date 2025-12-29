@@ -16,7 +16,7 @@ typedef struct {
     u8 destinationIP[4];
     u8 type; // icmp. todo: make generic
     u8 code;
-    u8 checksum;
+    u16 checksum;
     u16 icmpIdentifier;
     u16 sequence;
 } IpIcmp;
@@ -56,7 +56,7 @@ void SendPing(uint8_t *senderIP, uint8_t *targetIP, uint8_t *deviceMAC, uint8_t 
     memcpy(ip.destinationIP, targetIP, 4);
     ip.type = 8;
     ip.code = 0;
-    ip.checksum = 0; // todo: fill
+    ip.checksum = 0x3182; // todo: calculate
     ip.identifier = 2; // any value should be fine
     ip.sequence = 1;
 
