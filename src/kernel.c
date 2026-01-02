@@ -19,6 +19,23 @@ void init_network(void);
 void arp_test(void);
 void ping_test();
 
+struct align_check1 {
+    u8 a;
+    u8 b;
+    u8 c;
+    //u8 padding;
+    u32 d;
+};
+
+struct align_check2 {
+    u8 a;
+    u8 b;
+    u8 c;
+    u32 d;
+} PACKED;
+
+u8 buffer[] = {0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70};
+
 void kernel_main() {
     uart_init();
     init_printf(0, putc);
@@ -28,6 +45,16 @@ void kernel_main() {
     enable_interrupt_controller();
     irq_enable();
     timer_init();
+
+    printf("ALIGN CHECK\n");
+
+    struct align_check1 ac1;
+    memcpy(&ac1, buffer, 7);
+    printf("UNPACKED: A: %X, B: %X, C: %X, D: %X\n", ac1.a, ac1.b, ac1.c, ac1.d);
+
+    struct align_check2 ac2;
+    memcpy(&ac2, buffer, 7);
+    printf("PACKED: A: %X, B: %X, C: %X, D: %X\n", ac2.a, ac2.b, ac2.c, ac2.d);
 
     spi_init();
     init_network();
