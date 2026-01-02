@@ -1,4 +1,5 @@
 #include "common.h"
+#include "enc28j60.h"
 #include "mini_uart.h"
 #include "printf.h"
 #include "irq.h"
@@ -37,6 +38,8 @@ struct align_check2 {
 
 u8 buffer[] = {0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70};
 
+extern ENC_HandleTypeDef handle;
+
 void kernel_main() {
     uart_init();
     init_printf(0, putc);
@@ -67,23 +70,17 @@ void kernel_main() {
     spi_init();
     init_network();
     arp_test();
-    ping_test();
 
-    printf("\nEL: %d\n", get_el());
+    while (!ENC_GetReceivedFrame(&handle));
+    uint8_t *buf = (uint8_t *)handle.RxFrameInfos.buffer;
+    uint16_t len = handle.RxFrameInfos.length;
+    if (buf[12] == 0x08 && buf[13] == 0x00) {
+        printf("IPv4 frame came\n");
+    } else if (buf[12] == 0x08 && buf[13] == 0x06) {
+        printf("arp frame came\n");
+    }
 
-    printf("sleeping 2000 ms...\n");
-    timer_sleep(2000);
-
-    printf("sleeping 2000 ms...\n");
-    timer_sleep(2000);
-
-    printf("sleeping 5000 ms...\n");
-    timer_sleep(5000);
-
-    printf("sleeping 5000 ms...\n");
-    timer_sleep(5000);
-
-    printf("done\n");
+    // void *buf_send = get_free_pages(1);
 
     while (1) {
         // uart_send(uart_recv());
