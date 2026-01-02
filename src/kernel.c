@@ -2,6 +2,7 @@
 #include "mini_uart.h"
 #include "printf.h"
 #include "irq.h"
+#include "mem.h"
 #include "spi.h"
 #include "timer.h"
 
@@ -55,6 +56,13 @@ void kernel_main() {
     struct align_check2 ac2;
     memcpy(&ac2, buffer, 7);
     printf("PACKED: A: %X, B: %X, C: %X, D: %X\n", ac2.a, ac2.b, ac2.c, ac2.d);
+
+    void *p1 = get_free_pages(10);
+    void *p2 = get_free_pages(4);
+    void *p3 = allocate_memory(20 * 4096 + 1);
+    free_memory(p1);
+    free_memory(p2);
+    free_memory(p3);
 
     spi_init();
     init_network();

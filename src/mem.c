@@ -1,5 +1,6 @@
 #include "../include/peripherals/base.h"
 #include "../include/mm.h"
+#include "../include/mem.h"
 #include "../include/mmu.h"
 #include "../include/common.h"
 #include "../include/printf.h"
@@ -30,6 +31,55 @@
 #define PUD_ENTRY_MAP_SIZE     (1 << PUD_SHIFT)
 
 #define BLOCK_SIZE 0x40000000
+
+static u16 mem_map [PAGING_PAGES] = {0,};
+
+void *allocate_memory(int bytes) {
+    int pages = bytes / PAGE_SIZE;
+
+    if (bytes % PAGE_SIZE) pages++;
+
+    return get_free_pages(pages);
+}
+
+void free_memory(void *base) {
+    u64 page_num = (((u64)base) - LOW_MEMORY) / PAGE_SIZE;
+    int pages = mem_map[page_num];
+
+    printf("free_memory at address %X page num: %d pages: %d\n", base, page_num, pages);
+    for (int i = 0; i < pages; i++) {
+        mem_map[page_num + i] = 0;
+    }
+}
+
+void *get_free_pages(int num_pages) {
+    int start_index = 0;
+    int count = 0;
+
+    for (int i = 0; i < PAGING_PAGES; i++) {
+        if (mem_map[i] == 0) {
+            if (!count) {
+                start_index = i;
+            }
+            count++;
+
+            if (count == num_pages) {
+                mem_map[i] = count;
+
+                for (int c = 1; c < count; c++) {
+                    mem_map[c + start_index] = 1;
+                }
+
+                void *p = (void*)(LOW_MEMORY + (start_index * PAGE_SIZE));
+                printf("get_free_pages %d pages starting at %d at address %X", count, start_index, p);
+
+                return p;
+            }
+        } else {
+            count = 0;
+        }
+    }
+}
 
 void create_table_entry(u64 tbl, u64 next_tbl, u64 va, u64 shift, u64 flags) {
     u64 table_index = va >> shift;
