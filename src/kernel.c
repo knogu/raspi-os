@@ -72,9 +72,11 @@ void kernel_main() {
     arp_test();
 
     while (1) {
-        while (!ENC_GetReceivedFrame(&handle));
+        printf("Waiting for incoming packets...\n");
+        while (!ENC_GetReceivedFrame(&handle)) {}
         uint8_t *buf = (uint8_t *)handle.RxFrameInfos.buffer;
         uint16_t len = handle.RxFrameInfos.length;
+        printf("Incoming frame: Type: %X %X\n", buf[12], buf[13]);
         if (buf[12] == 0x08 && buf[13] == 0x00) {
             printf("IPv4 frame came\n");
         } else if (buf[12] == 0x08 && buf[13] == 0x06) {
