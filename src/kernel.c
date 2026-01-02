@@ -32,7 +32,7 @@ struct align_check2 {
     u8 b;
     u8 c;
     u32 d;
-} PACKED;
+} __attribute__((packed));
 
 u8 buffer[] = {0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70};
 
