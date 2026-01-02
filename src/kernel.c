@@ -71,13 +71,15 @@ void kernel_main() {
     init_network();
     arp_test();
 
-    while (!ENC_GetReceivedFrame(&handle));
-    uint8_t *buf = (uint8_t *)handle.RxFrameInfos.buffer;
-    uint16_t len = handle.RxFrameInfos.length;
-    if (buf[12] == 0x08 && buf[13] == 0x00) {
-        printf("IPv4 frame came\n");
-    } else if (buf[12] == 0x08 && buf[13] == 0x06) {
-        printf("arp frame came\n");
+    while (1) {
+        while (!ENC_GetReceivedFrame(&handle));
+        uint8_t *buf = (uint8_t *)handle.RxFrameInfos.buffer;
+        uint16_t len = handle.RxFrameInfos.length;
+        if (buf[12] == 0x08 && buf[13] == 0x00) {
+            printf("IPv4 frame came\n");
+        } else if (buf[12] == 0x08 && buf[13] == 0x06) {
+            printf("arp frame came\n");
+        }
     }
 
     // void *buf_send = get_free_pages(1);
