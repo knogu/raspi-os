@@ -46,7 +46,7 @@ void free_memory(void *base) {
     u64 page_num = (((u64)base) - LOW_MEMORY) / PAGE_SIZE;
     int pages = mem_map[page_num];
 
-    printf("free_memory at address %X page num: %d pages: %d\n", base, page_num, pages);
+    printf("\nfree_memory at address %X page num: %d pages: %d\n", base, page_num, pages);
     for (int i = 0; i < pages; i++) {
         mem_map[page_num + i] = 0;
     }
@@ -71,7 +71,7 @@ void *get_free_pages(int num_pages) {
                 }
 
                 void *p = (void*)(LOW_MEMORY + (start_index * PAGE_SIZE));
-                printf("get_free_pages %d pages starting at %d at address %X", count, start_index, p);
+                printf("\nget_free_pages %d pages starting at %d at address %X\n", count, start_index, p);
 
                 return p;
             }
