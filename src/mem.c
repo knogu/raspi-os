@@ -64,7 +64,7 @@ void *get_free_pages(int num_pages) {
             count++;
 
             if (count == num_pages) {
-                mem_map[i] = count;
+                mem_map[start_index] = count;
 
                 for (int c = 1; c < count; c++) {
                     mem_map[c + start_index] = 1;
