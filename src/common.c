@@ -15,7 +15,7 @@ uint16_t checksum(void* bytes, uint16_t len) {
     uint32_t sum = 0;
     while (len >= 2) {
         uint16_t word = ((uint16_t)p[0] << 8) | (uint16_t)p[1];
-        printf("adding %X from p: %X", word, p);
+        printf("adding %X ( %X %X ) from p: %X\n", word, p[0], p[1], p);
         sum += word;
         p += 2;
         len -= 2;
