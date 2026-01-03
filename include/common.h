@@ -32,3 +32,5 @@ extern uint8_t deviceIP[4];
 // IP Address of the router, whose hardware address we will find using the ARP request
 
 extern uint8_t routerIP[4];
+
+uint16_t checksum(void* bytes, uint16_t len);
