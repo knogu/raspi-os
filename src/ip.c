@@ -101,6 +101,15 @@ void send_ether(uint8_t *deviceMAC, uint8_t *destMac, void *payload, int payload
     memcpy(eth->eth.DestAddrs, destMac, 6);
     eth->eth.type = type;
     memcpy(eth->payload, payload, payload_len);
+
+    if (ENC_RestoreTXBuffer(&handle, sizeof(IpIcmp)) == 0) {
+        printf("Sending ether...\n");
+
+        ENC_WriteBuffer((unsigned char *)&eth, sizeof(Ether) + payload_len);
+        handle.transmitLength = sizeof(Ether) + payload_len;
+
+        ENC_Transmit(&handle);
+    }
 }
 
 void send_ip(uint8_t *senderIP, uint8_t *targetIP, void* payload_ptr, int payload_size) {
