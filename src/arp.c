@@ -160,7 +160,7 @@ void SendArpResponse(uint8_t *targetIP, uint8_t *deviceMAC, uint8_t *destMac)
    arpPacket.protocol = IPPACKET;
    arpPacket.hardwareSize = 0x06; // sizeof(deviceMAC);
    arpPacket.protocolSize = 0x04; // sizeof(deviceIP);
-   arpPacket.opCode = 0x02;
+   arpPacket.opCode = 0x02 << 8;
 
    memcpy(arpPacket.targetMAC, destMac, 6);
 
