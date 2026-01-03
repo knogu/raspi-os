@@ -93,7 +93,7 @@ void SendPong(uint8_t *senderIP, uint8_t *targetIP, uint8_t *deviceMAC, uint8_t 
     memcpy(ip.destinationIP, targetIP, 4);
     ip.type = 0;
     ip.code = 0;
-    ip.checksum = 0xfcf7; // todo: calculate
+    ip.checksum = 0xfcff; // todo: calculate
     ip.icmpIdentifier = 2 << 8; // any value should be fine
     ip.sequence = 1 << 8;
 
