@@ -51,7 +51,7 @@ struct Icmp {
     u16 checksum;
     u16 identifier;
     u16 sequence;
-    u8 payload[47]; // fixed for mac os. todo: copy from req
+    u8 payload[0x38]; // fixed for mac os. todo: copy from req
 } __attribute__((packed));
 
 typedef struct Icmp Icmp;
@@ -133,8 +133,8 @@ void pong(uint16_t identifier, uint16_t sequence) {
     icmp->code = 0;
     icmp->identifier = identifier;
     icmp->sequence = sequence;
-    for (int i = 46; i >= 0; i--) {
-        icmp->payload[i] = 0xa + 46 - i;
+    for (int i = 0x0a; i < 0x38; i++) {
+        icmp->payload[i] = i;
     }
     icmp->checksum = 0;
     icmp->checksum = checksum(icmp, sizeof(Icmp));
