@@ -6,7 +6,7 @@
 struct Ether {
     EtherNetII eth;
     u8 payload[];
-} __attribute__((packed));
+};
 
 typedef struct Ether Ether;
 
@@ -102,11 +102,12 @@ void send_ether(uint8_t *deviceMAC, uint8_t *destMac, void *payload, int payload
     eth->eth.type = type;
     memcpy(eth->payload, payload, payload_len);
 
-    if (ENC_RestoreTXBuffer(&handle, sizeof(IpIcmp)) == 0) {
+    int size = sizeof(Ether) + payload_len;
+    if (ENC_RestoreTXBuffer(&handle, size) == 0) {
         printf("Sending ether...\n");
 
-        ENC_WriteBuffer((unsigned char *)&eth, sizeof(Ether) + payload_len);
-        handle.transmitLength = sizeof(Ether) + payload_len;
+        ENC_WriteBuffer((unsigned char *)eth, size);
+        handle.transmitLength = size;
 
         ENC_Transmit(&handle);
     }
