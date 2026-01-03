@@ -14,7 +14,7 @@ uint16_t checksum(void* bytes, uint16_t len) {
     uint16_t *pos = (uint16_t*)bytes;
     unsigned long sum = 0;
     for (int i = 0; i < len / 2 + len % 1; i++) {
-        printf("adding %X from %p. i: %d\n", *pos, pos, i);
+        printf("adding %X from %X. i: %d\n", *pos, pos, i);
         sum += *pos;
         pos++;
     }
