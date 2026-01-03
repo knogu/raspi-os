@@ -70,11 +70,42 @@ void SendPing(uint8_t *senderIP, uint8_t *targetIP, uint8_t *deviceMAC, uint8_t 
     }
 }
 
-extern uint8_t routerIP[4];
-extern uint8_t deviceIP[4];
+void SendPong(uint8_t *senderIP, uint8_t *targetIP, uint8_t *deviceMAC, uint8_t *destMac) {
+    // Icmp icmp;
+    // icmp.type = 8;
+    // icmp.code = 0;
+    // icmp.checksum = 0; // todo: fill
+    // icmp.identifier = 2; // any value should be fine
+    // icmp.sequence = 1;
 
-extern uint8_t myMAC[6];
-extern uint8_t routerMAC[6];
+    IpIcmp ip;
+    memcpy(ip.eth.SrcAddrs, deviceMAC, 6);
+    memcpy(ip.eth.DestAddrs, destMac, 6);
+    ip.eth.type = 0x0008;
+
+    ip.verAndHeaderLen = 4 << 4 | 5; // 4 is from ipv4 and 5 is from that the header len 160 bits divided by 32
+    ip.tos = 0;
+    ip.packetsLen = (7*4) << 8; // todo: calculate
+    ip.ttl = 64;
+    ip.protocol = 1; // icmp
+    ip.headerChecksum = 0; // todo
+    memcpy(ip.senderIP, senderIP, 4);
+    memcpy(ip.destinationIP, targetIP, 4);
+    ip.type = 0;
+    ip.code = 0;
+    ip.checksum = 0xfcf7; // todo: calculate
+    ip.icmpIdentifier = 2 << 8; // any value should be fine
+    ip.sequence = 1 << 8;
+
+    if (ENC_RestoreTXBuffer(&handle, sizeof(IpIcmp)) == 0) {
+        printf("Sending ...\n");
+
+        ENC_WriteBuffer((unsigned char *)&ip, sizeof(IpIcmp));
+        handle.transmitLength = sizeof(IpIcmp);
+
+        ENC_Transmit(&handle);
+    }
+}
 
 void ping_test() {
     SendPing(deviceIP, routerIP, myMAC, routerMAC);
