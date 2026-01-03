@@ -40,6 +40,7 @@ u8 buffer[] = {0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70};
 
 extern ENC_HandleTypeDef handle;
 void SendPong(uint8_t *senderIP, uint8_t *targetIP, uint8_t *deviceMAC, uint8_t *destMac);
+void SendArpResponse(uint8_t *targetIP, uint8_t *deviceMAC, uint8_t *destMac);
 
 
 void kernel_main() {
@@ -84,6 +85,7 @@ void kernel_main() {
             SendPong(deviceIP, routerIP, myMAC, routerMAC);
         } else if (buf[12] == 0x08 && buf[13] == 0x06) {
             printf("arp frame came\n");
+            SendArpResponse(routerIP, myMAC, routerMAC);
         }
     }
 

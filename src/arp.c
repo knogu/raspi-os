@@ -135,6 +135,62 @@ void SendArpPacket(uint8_t *targetIP, uint8_t *deviceMAC)
    }
 }
 
+void SendArpResponse(uint8_t *targetIP, uint8_t *deviceMAC, uint8_t *destMac)
+{
+   /* Parameters:
+    *   targetIP - The target IP Address for the ARP request (the one whose hardware
+    *              address we want)
+    *   deviceMAC - The MAC address of the ENC28J60, i.e. the source MAC for the ARP
+    *               request
+   */
+
+   ARP arpPacket;
+
+   // The source of the packet will be the ENC28J60 MAC address
+   memcpy(arpPacket.eth.SrcAddrs, deviceMAC, 6);
+
+   // The destination is broadcast - a MAC address of FF:FF:FF:FF:FF:FF
+   memcpy(arpPacket.eth.DestAddrs, destMac, 6);
+
+   arpPacket.eth.type = ARPPACKET;
+   arpPacket.hardware = ETHERNET;
+
+   // We want an IP address resolved
+
+   arpPacket.protocol = IPPACKET;
+   arpPacket.hardwareSize = 0x06; // sizeof(deviceMAC);
+   arpPacket.protocolSize = 0x04; // sizeof(deviceIP);
+   arpPacket.opCode = 0x02;
+
+   memcpy(arpPacket.targetMAC, destMac, 6);
+
+   // Sender MAC is the ENC28J60's MAC address
+   memcpy(arpPacket.senderMAC, deviceMAC, 6);
+
+   memcpy(arpPacket.targetIP, targetIP, 4);
+
+   // Check if the last reply has come from an IP address that we want i.e. someone else is already using it
+   // if (!memcmp(targetIP, deviceIP, 4)) {
+   //    // Yes, someone is using our IP so set the sender IP to 0.0.0.0
+   //    memset(arpPacket.senderIP, 0, 4);
+   // } else {
+      // No, nobody is using our IP so we can use it confidently
+      memcpy(arpPacket.senderIP, deviceIP, 4);
+   // }
+
+   // Send the packet
+
+   if (ENC_RestoreTXBuffer(&handle, sizeof(ARP)) == 0) {
+      printf("Sending ARP response.");
+      printf("\n");
+
+      ENC_WriteBuffer((unsigned char *)&arpPacket, sizeof(ARP));
+      handle.transmitLength = sizeof(ARP);
+
+      ENC_Transmit(&handle);
+   }
+}
+
 void arp_test(void)
 {
    ARP *checkPacket;
