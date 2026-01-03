@@ -48,7 +48,7 @@ typedef struct Ip Ip;
 struct Icmp {
     u8 type;
     u8 code;
-    u8 checksum;
+    u16 checksum;
     u16 identifier;
     u16 sequence;
     u8 payload[48]; // fixed for mac os. todo: copy from req
@@ -117,7 +117,7 @@ void send_ip(uint8_t *senderIP, uint8_t *targetIP, void* payload_ptr, int payloa
     Ip *ip = get_free_pages(1);
     ip->verAndHeaderLen = 4 << 4 | 5; // 4 is from ipv4 and 5 is from that the header len 160 bits divided by 32
     ip->tos = 0;
-    ip->packetsLen = 0x54 << 8; // todo: calculate
+    ip->packetsLen = 84 << 8; // todo: calculate
     ip->ttl = 64;
     ip->protocol = 1; // icmp
     ip->headerChecksum = 0; // todo
