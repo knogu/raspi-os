@@ -83,6 +83,7 @@ void kernel_main() {
         printf("Incoming frame: Type: %X %X\n", buf[12], buf[13]);
         if (buf[12] == 0x08 && buf[13] == 0x00) {
             printf("IPv4 frame came\n");
+            printf("sequence: %X, buf[40]: %X, buf[41]: %X\n", buf[41] << 8 | buf[40], buf[40], buf[41]);
             pong(buf[39] << 8 | buf[38], buf[41] << 8 | buf[40], buf + 42, 56);
         } else if (buf[12] == 0x08 && buf[13] == 0x06) {
             printf("arp frame came\n");
