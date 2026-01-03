@@ -82,7 +82,7 @@ void kernel_main() {
         printf("Incoming frame: Type: %X %X\n", buf[12], buf[13]);
         if (buf[12] == 0x08 && buf[13] == 0x00) {
             printf("IPv4 frame came\n");
-            SendPong(deviceIP, routerIP, myMAC, routerMAC, buf[38] << 8 | buf[39], buf[40] << 8 | buf[41]);
+            SendPong(deviceIP, routerIP, myMAC, routerMAC, buf[39] << 8 | buf[38], buf[41] << 8 | buf[40]);
         } else if (buf[12] == 0x08 && buf[13] == 0x06) {
             printf("arp frame came\n");
             SendArpResponse(routerIP, myMAC, routerMAC);
