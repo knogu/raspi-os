@@ -134,7 +134,7 @@ void pong(uint16_t identifier, uint16_t sequence) {
     icmp->identifier = identifier;
     icmp->sequence = sequence;
     for (int i = 0x0a; i < 0x38; i++) {
-        icmp->payload[i] = i;
+        icmp->payload[i - 0x0a] = i;
     }
     icmp->checksum = 0;
     icmp->checksum = checksum(icmp, sizeof(Icmp));
