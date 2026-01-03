@@ -127,15 +127,13 @@ void send_ip(uint8_t *senderIP, uint8_t *targetIP, void* payload_ptr, int payloa
     send_ether(myMAC, routerMAC, ip, sizeof(Ip) + payload_size, 0x0008);
 }
 
-void pong(uint16_t identifier, uint16_t sequence) {
+void pong(uint16_t identifier, uint16_t sequence, u8 payload[], u16 payload_len) {
     Icmp *icmp = get_free_pages(1);
     icmp->type = 0;
     icmp->code = 0;
     icmp->identifier = identifier;
     icmp->sequence = sequence;
-    for (int i = 0x0a; i < 0x38; i++) {
-        icmp->payload[i - 0x0a] = i;
-    }
+    memcpy(icmp->payload, payload, payload_len);
     icmp->checksum = 0;
     icmp->checksum = checksum(icmp, sizeof(Icmp));
     send_ip(deviceIP, routerIP, icmp, sizeof(Icmp));
