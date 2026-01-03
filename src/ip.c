@@ -70,7 +70,7 @@ void SendPing(uint8_t *senderIP, uint8_t *targetIP, uint8_t *deviceMAC, uint8_t 
     }
 }
 
-void SendPong(uint8_t *senderIP, uint8_t *targetIP, uint8_t *deviceMAC, uint8_t *destMac) {
+void SendPong(uint8_t *senderIP, uint8_t *targetIP, uint8_t *deviceMAC, uint8_t *destMac, uint16_t identifier, uint16_t sequence) {
     // Icmp icmp;
     // icmp.type = 8;
     // icmp.code = 0;
@@ -94,8 +94,8 @@ void SendPong(uint8_t *senderIP, uint8_t *targetIP, uint8_t *deviceMAC, uint8_t 
     ip.type = 0;
     ip.code = 0;
     ip.checksum = 0xfcff; // todo: calculate
-    ip.icmpIdentifier = 2 << 8; // any value should be fine
-    ip.sequence = 1 << 8;
+    ip.icmpIdentifier = identifier;
+    ip.sequence = sequence;
 
     if (ENC_RestoreTXBuffer(&handle, sizeof(IpIcmp)) == 0) {
         printf("Sending ...\n");

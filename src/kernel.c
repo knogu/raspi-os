@@ -39,8 +39,8 @@ struct align_check2 {
 u8 buffer[] = {0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70};
 
 extern ENC_HandleTypeDef handle;
-void SendPong(uint8_t *senderIP, uint8_t *targetIP, uint8_t *deviceMAC, uint8_t *destMac);
 void SendArpResponse(uint8_t *targetIP, uint8_t *deviceMAC, uint8_t *destMac);
+void SendPong(uint8_t *senderIP, uint8_t *targetIP, uint8_t *deviceMAC, uint8_t *destMac, uint16_t identifier, uint16_t sequence);
 
 
 void kernel_main() {
@@ -82,7 +82,7 @@ void kernel_main() {
         printf("Incoming frame: Type: %X %X\n", buf[12], buf[13]);
         if (buf[12] == 0x08 && buf[13] == 0x00) {
             printf("IPv4 frame came\n");
-            SendPong(deviceIP, routerIP, myMAC, routerMAC);
+            SendPong(deviceIP, routerIP, myMAC, routerMAC, buf[44], buf[60]);
         } else if (buf[12] == 0x08 && buf[13] == 0x06) {
             printf("arp frame came\n");
             SendArpResponse(routerIP, myMAC, routerMAC);
